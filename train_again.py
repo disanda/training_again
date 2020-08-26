@@ -149,7 +149,7 @@ class ProGAN:
             print("\n\nCurrently working on Depth: ", current_depth)
             current_res = np.power(2, current_depth + 2)
             print("Current resolution: %d x %d" % (current_res, current_res))
-            data = torch.utils.data.DataLoader(dataset=dataSet,batch_size=batch_sizes[current_depth],shuffle=True,num_works=num_workers, pin_memory=True)
+            data = torch.utils.data.DataLoader(dataset=dataSet,batch_size=batch_sizes[current_depth],shuffle=True,num_workers=num_workers, pin_memory=True)
             ticker = 1
             for epoch in range(1, epochs[current_depth] + 1):
                 start = timeit.default_timer()  # record time at the start of epoch
