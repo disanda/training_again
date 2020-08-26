@@ -240,8 +240,8 @@ if __name__ == '__main__':
     # ======================================================================
     pro_gan = ProGAN(depth=depth, latent_size=latent_size, device=device)
 
-    data_path='/home/disanda/Desktop/dataSet/CelebAMask-HQ/CelebA-HQ-img'
-    #data_path='/_yucheng/dataSet/CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img'
+    #data_path='/home/disanda/Desktop/dataSet/CelebAMask-HQ/CelebA-HQ-img'
+    data_path='/_yucheng/dataSet/CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img'
     #data_path='F:/dataSet2/CelebAMask-HQ/CelebA-HQ-img'
     trans = torchvision.transforms.ToTensor()
     dataset = DatasetFromFolder(data_path,transform=trans)
