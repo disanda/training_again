@@ -51,8 +51,8 @@ class ProGAN:
                  loss="wgan-gp", use_ema=True, ema_decay=0.999,
                  device=torch.device("cpu")):
         # Create the Generator and the Discriminator
-        self.gen = netG
-        self.dis = netD2
+        self.gen = copy.deepcopy(netG)
+        self.dis = copy.deepcopy(netD2)
         # state of the object
         self.latent_size = latent_size
         self.depth = depth
