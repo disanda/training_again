@@ -149,7 +149,7 @@ class ProGAN:
             print("\n\nCurrently working on Depth: ", current_depth)
             current_res = np.power(2, current_depth + 2)
             print("Current resolution: %d x %d" % (current_res, current_res))
-            data = torch.utils.data.DataLoader(dataset=dataSet,batch_size=batch_sizes[current_depth],shuffle=True,pin_memory=True)
+            data = torch.utils.data.DataLoader(dataset=dataSet,batch_size=batch_sizes[current_depth],shuffle=True,numworks=num_workers, pin_memory=True)
             ticker = 1
             for epoch in range(1, epochs[current_depth] + 1):
                 start = timeit.default_timer()  # record time at the start of epoch
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     # hyper-parameters per depth (resolution)
     num_epochs = [10, 10, 10, 10, 10, 10, 10, 10, 10]
     fade_ins = [50, 50, 50, 50, 50, 50, 50, 50, 50]
-    batch_sizes = [128, 128, 128, 128, 64, 64, 64, 32, 32]
+    batch_sizes = [128, 128, 128, 64, 64, 64, 64, 32, 32]
     latent_size = 512
 
     # ======================================================================
@@ -255,6 +255,6 @@ if __name__ == '__main__':
         sample_dir="./result/celeba1024_rc/",
         log_dir="./result/celeba1024_rc/", 
         save_dir="./result/celeba1024_rc/",
-        #num_workers=0
+        num_workers=0
     )
     # ======================================================================
