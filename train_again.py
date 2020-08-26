@@ -50,10 +50,13 @@ class ProGAN:
                  beta_2=0.99, eps=1e-8, drift=0.001, n_critic=1, use_eql=True,
                  loss="wgan-gp", use_ema=True, ema_decay=0.999,
                  device=torch.device("cpu")):
-        # Create the Generator and the Discriminator
-        self.gen = copy.deepcopy(netG)
-        self.dis = copy.deepcopy(netD2)
-        # state of the object
+        #self.gen = copy.deepcopy(netG)
+        #self.dis = copy.deepcopy(netD2)
+        self.gen = pg.Generator(depth, latent_size, use_eql=use_eql).to(device)
+        self.dis = pg.Discriminator(depth, latent_size, use_eql=use_eql).to(device)
+        if device == torch.device("cuda"):
+            self.gen = DataParallel(self.gen)
+            self.dis = DataParallel(self.dis)
         self.latent_size = latent_size
         self.depth = depth
         self.use_ema = use_ema
