@@ -15,7 +15,7 @@ import copy
 import time
 import timeit
 
-device = 'cuda'
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 resultPath = "./result_trainAG_1.1"
 if not os.path.exists(resultPath):
     os.mkdir(resultPath)
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     # hyper-parameters per depth (resolution)
     num_epochs = [10, 10, 10, 10, 10, 10, 10, 10, 10]
     fade_ins = [50, 50, 50, 50, 50, 50, 50, 50, 50]
-    batch_sizes = [128, 128, 128, 64, 64, 64, 64, 32, 32]
+    batch_sizes = [128, 128, 128, 128, 64, 64, 64, 32, 32]
     latent_size = 512
 
     # ======================================================================
