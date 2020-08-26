@@ -20,27 +20,28 @@ resultPath = "./result_trainAG_1.1"
 if not os.path.exists(resultPath):
     os.mkdir(resultPath)
 
-# netG = torch.nn.DataParallel(pg.Generator(depth=9))# in: [-1,512], depth:0-4,1-8,2-16,3-32,4-64,5-128,6-256,7-512,8-1024
-# netG.load_state_dict(torch.load('./pre-model/GAN_GEN_SHADOW_8.pth',map_location=device)) #shadow的效果要好一些 
-# netD1 = torch.nn.DataParallel(encoder.Discriminator(height=9, feature_size=512))# in: [-1,3,1024,1024],out:[], depth:0-4,1-8,2-16,3-32,4-64,5-128,6-256,7-512,8-1024
-# netD1.load_state_dict(torch.load('./pre-model/GAN_DIS_8.pth',map_location=device))
+netG = torch.nn.DataParallel(pg.Generator(depth=9))# in: [-1,512], depth:0-4,1-8,2-16,3-32,4-64,5-128,6-256,7-512,8-1024
+netG.load_state_dict(torch.load('./pre-model/GAN_GEN_SHADOW_8.pth',map_location=device)) #shadow的效果要好一些 
+netD1 = torch.nn.DataParallel(encoder.Discriminator(height=9, feature_size=512))# in: [-1,3,1024,1024],out:[], depth:0-4,1-8,2-16,3-32,4-64,5-128,6-256,7-512,8-1024
+netD1.load_state_dict(torch.load('./pre-model/GAN_DIS_8.pth',map_location=device))
 
-# netD2 = torch.nn.DataParallel(encoder.encoder_v1(height=9, feature_size=512).to(device))
+netD2 = torch.nn.DataParallel(encoder.encoder_v1(height=9, feature_size=512).to(device))
 
-# def toggle_modelGrad(model,flag):
-#     for i in model.parameters():
-#         i.requires_grad_(flag)
+def toggle_modelGrad(model,flag):
+    for i in model.parameters():
+        i.requires_grad_(flag)
 
-# toggle_modelGrad(netD1,False)
-# toggle_modelGrad(netD2,False)
+toggle_modelGrad(netD1,False)
+toggle_modelGrad(netD2,False)
 
-# paraDict = dict(netD1.named_parameters()) # pre_model weight dict
-# for i,j in netD2.named_parameters():
-#     if i in paraDict.keys():
-#         w = paraDict[i]
-#         j.copy_(w)
+paraDict = dict(netD1.named_parameters()) # pre_model weight dict
+for i,j in netD2.named_parameters():
+    if i in paraDict.keys():
+        w = paraDict[i]
+        j.copy_(w)
 
-# toggle_modelGrad(netD2,True)
+toggle_modelGrad(netD2,True)
+del netD1
 
 #-------------------------training again-------------------------
 class ProGAN:
@@ -50,10 +51,8 @@ class ProGAN:
                  loss="wgan-gp", use_ema=True, ema_decay=0.999,
                  device=torch.device("cpu")):
         # Create the Generator and the Discriminator
-        self.gen = torch.nn.DataParallel(pg.Generator(depth=depth))
-        self.dis = torch.nn.DataParallel(encoder.Discriminator(height=depth))
-        self.gen.load_state_dict(torch.load('./pre-model/GAN_GEN_SHADOW_8.pth',map_location=device)) #shadow的效果要好一些 
-        self.dis.load_state_dict(torch.load('./pre-model/GAN_DIS_8.pth',map_location=device))
+        self.gen = netG
+        self.dis = netD2
         # state of the object
         self.latent_size = latent_size
         self.depth = depth
